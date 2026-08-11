@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                echo 'Getting source code...'
-            }
-        }
-
         stage('Build') {
             steps {
                 sh 'mvn clean package'
@@ -18,6 +12,12 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'mvn test'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t hello-java:1.0 .'
             }
         }
 
