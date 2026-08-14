@@ -42,5 +42,14 @@ stage('Docker Push') {
               }
          }
       }
+           stage('Docker Deploy') {
+    steps {
+        sh '''
+            docker pull ${IMAGE_NAME}:${BUILD_NUMBER}
+            docker rm -f hello-java || true
+            docker run -d --name hello-java ${IMAGE_NAME}:${BUILD_NUMBER}
+        '''
+    }
+}
     }
 }
