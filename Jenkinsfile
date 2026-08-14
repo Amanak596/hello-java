@@ -20,27 +20,27 @@ pipeline {
         }
 
         stage('Docker Build') {
-            steps {
-                sh 'docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .'
-            }
-        }
+    steps {
+        sh 'docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .'
+    }
+}
 
-        stage('Docker Push') {
-            steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub-creds',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )
-                ]) {
-                    sh '''
-                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push ${IMAGE_NAME}:${BUILD_NUMBER}
-                        docker logout
-                    '''
-                }
-            }
-        }
+stage('Docker Push') {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'dockerhub-creds',
+                usernameVariable: 'DOCKER_USER',
+                passwordVariable: 'DOCKER_PASSWORD'
+            )
+        ]) {
+            sh '''
+                echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+                docker push ${IMAGE_NAME}:${BUILD_NUMBER}
+                docker logout
+            '''
+              }
+         }
+      }
     }
 }
